@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <nuxt />
 </template>
 <script>
 import axios from "axios";
