@@ -4,43 +4,65 @@
     <div class="w-full card">
       <div class="form-group">
         <label for="" class="text-grey">Companies</label>
-
+        <p v-if="$fetchState.pending">Fetching companies...</p>
         <select
+          v-else
+          v-model="selectedCompany"
           name="companies"
           id=""
           class="appearance-none input-field form-icon-chevron_down"
         >
-          <option>Company 1</option>
+          <option v-for="company in companies" :key="company.id" :value="company.id">
+            {{ company.name }}
+          </option>
         </select>
       </div>
-      <button type="button" class="w-full btn btn-primary mt-[14px]">Continue</button>
+      <button
+        type="button"
+        @click="selectCompany"
+        class="w-full btn btn-primary mt-[14px]"
+      >
+        Continue
+      </button>
       <div class="text-center">or</div>
-      <NuxtLink to="" class="w-full border btn btn-white"> Create New Company </NuxtLink>
+      <NuxtLink to="/companies/create" class="w-full border btn btn-white">
+        Create New Company
+      </NuxtLink>
     </div>
   </section>
 </template>
 <script>
 export default {
   middleware: "auth",
-  async asyncData({ $axios }) {
+  async fetch() {
     try {
-      const response = await $axios.get("/company");
-      if (response.ok) {
+      const response = await this.$axios.get("/company");
+      if (response.data.meta.code === 200) {
         const companiesData = response.data.result.data;
-        return { company: companiesData, loading: false };
+        this.companies = companiesData;
       } else {
-        return { company: null, loading: false };
+        this.companies = null;
       }
     } catch (error) {
       console.error(error);
-      return { company: null, loading: false };
+      this.companies = null;
     }
   },
   data() {
     return {
-      company: [],
-      loading: true,
+      companies: [],
+      selectedCompany: "",
     };
+  },
+  methods: {
+    selectCompany() {
+      this.$router.push({
+        name: "companies-id",
+        params: {
+          id: this.selectedCompany,
+        },
+      });
+    },
   },
 };
 </script>
