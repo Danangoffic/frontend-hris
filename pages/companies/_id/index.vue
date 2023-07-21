@@ -59,7 +59,9 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-grey">Employees</p>
-                <div class="text-[32px] font-bold text-dark mt-[6px]">0</div>
+                <div class="text-[32px] font-bold text-dark mt-[6px]">
+                  {{ employeesTotal }}
+                </div>
               </div>
               <a href="employee_create.html">
                 <img src="/assets/svgs/ric-plus.svg" alt="" />
@@ -70,7 +72,9 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-grey">Teams</p>
-                <div class="text-[32px] font-bold text-dark mt-[6px]">0</div>
+                <div class="text-[32px] font-bold text-dark mt-[6px]">
+                  {{ teamsTotal }}
+                </div>
               </div>
               <a href="#">
                 <img src="/assets/svgs/ric-plus.svg" alt="" />
@@ -156,5 +160,53 @@ export default {
     };
   },
   layout: "dashboard",
+  data() {
+    return {
+      employeesTotal: 0,
+      teamsTotal: 0,
+    };
+  },
+  async fetch() {
+    try {
+      const responseTeamTotal = await this.$axios.get("/employee/total", {
+        params: {
+          company_id: this.$route.params.id,
+        },
+      });
+      if (responseTeamTotal.data.meta.code === 200) {
+        const total = responseTeamTotal.data.result;
+        this.employeesTotal = total;
+      } else {
+        console.log(responseTeamTotal.data.meta.message);
+        this.employeesTotal = 0;
+      }
+    } catch (error) {
+      console.error(error);
+      this.employeesTotal = 0;
+      // redirect to home
+      // this.$route.push({
+      //   name: "/",
+      // });
+    }
+  },
+  methods: {},
+  // async fetchTeams({param}){
+  //     try {
+  //       const responseTeamTotal = await this.$axios.get("/team", {
+  //         params: {
+  //           company_id: param.id,
+  //         },
+  //       });
+  //       if (responseTeamTotal.data.meta.code === 200) {
+  //         const total = responseTeamTotal.data.result;
+  //         this.teamsTotal = total;
+  //       } else {
+  //         this.teamsTotal = 0;
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       this.teamsTotal = 0;
+  //     }
+  //   },
 };
 </script>
