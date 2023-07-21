@@ -95,6 +95,7 @@
 
 <script>
 export default {
+  middleware: "auth",
   layout: "form",
   data() {
     return {

@@ -6,33 +6,74 @@
       Manage your employees to achieve <br />
       a bigger goals for your company
     </p>
-    <form class="w-full card">
+    <form class="w-full card" @submit.prevent="userRegister">
       <div class="form-group">
-        <label for="" class="text-grey">Company Name</label>
-        <input type="text" class="input-field" />
+        <label for="name" class="text-grey">Name</label>
+        <input id="name" type="text" v-model="registerForm.name" class="input-field" />
       </div>
       <div class="form-group">
-        <label for="" class="text-grey">Email Address</label>
-        <input type="email" class="input-field" />
+        <label for="email" class="text-grey">Email Address</label>
+        <input id="email" type="email" v-model="registerForm.email" class="input-field" />
       </div>
       <div class="form-group">
-        <label for="" class="text-grey">Password</label>
-        <input type="password" class="input-field" />
+        <label for="password" class="text-grey">Password</label>
+        <input
+          id="password"
+          type="password"
+          v-model="registerForm.password"
+          class="input-field"
+        />
       </div>
-      <a href="signin.html" class="w-full btn btn-primary mt-[14px]"> Continue </a>
-      <!-- <button type="button" class="w-full btn btn-primary mt-[14px]">
-                Continue
-            </button> -->
+      <!-- <a href="signin.html" class="w-full btn btn-primary mt-[14px]"> Continue </a> -->
+      <button type="submit" class="w-full btn btn-primary mt-[14px]">Continue</button>
+      <div class="text-center">or</div>
+      <NuxtLink to="/login" class="w-full border border-gray-400 btn btn-white">
+        Login
+      </NuxtLink>
     </form>
   </section>
 </template>
 <script>
 export default {
+  auth: 'guest',
   name: "RegisterPage",
   head() {
     return {
       title: "PowerHuman HRIS - Register",
     };
+  },
+  data() {
+    return {
+      registerForm: {
+        name: "",
+        email: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    async userRegister() {
+      try {
+        const responseRegister = await this.$axios.post("/register", this.registerForm);
+        const meta = responseRegister.data.meta;
+        console.log({ code: meta.code, message: meta.message });
+        if (meta.code === 200) {
+          try {
+            let responselogin = await this.$auth.loginWith("local", {
+              data: this.registerForm,
+            });
+            console.log(responselogin);
+          } catch (err) {
+            console.log(err);
+          }
+        } else {
+          console.error(responseRegister);
+        }
+      } catch (error) {
+        console.error(error);
+        console.error(error.message);
+      }
+    },
   },
 };
 </script>

@@ -50,39 +50,32 @@ export default {
   auth: {
     // Options auth with sanctum
     strategies: {
-      laravelSanctum: {
-        provider: 'laravel/sanctum',
-        url: 'http://backend-powerhuman.test/api',
-        endpoints: {
-          login: {
-            url: '/login',
-            method: 'post',
-            propertyName: 'token',
-          },
-          logout: {
-            url: '/logout',
-            method: 'post',
-          },
-          user: {
-            url: '/user',
-            method: 'get',
-            propertyName: 'data',
-          },
+      local: {
+        token: {
+          property: 'result.access_token',
+          global: true,
+          required: true,
+          type: 'Bearer',
         },
-        tokenRequired: true,
-        tokenType: 'bearer',
-        globalToken: true,
-        autoFetchUser: true,
+        user: {
+          property: 'result',
+          autoFetch: true,
+        },
+        endpoints: {
+          login: { url: '/login', method: 'post' },
+          logout: { url: '/logout', method: 'post' },
+          user: { url: '/user', method: 'get' },
+        },
       },
     },
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    proxy: true,
-    credentials: true,
+    // proxy: true,
+    // credentials: true,
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://backend-powerhuman.test/api/',
+    baseURL: 'http://backend-powerhuman.test/api',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

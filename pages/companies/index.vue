@@ -4,7 +4,6 @@
     <div class="w-full card">
       <div class="form-group">
         <label for="" class="text-grey">Companies</label>
-
         <select
           name="companies"
           id=""
@@ -22,25 +21,6 @@
 <script>
 export default {
   middleware: "auth",
-  async asyncData({ $axios }) {
-    try {
-      const response = await $axios.get("/company");
-      if (response.ok) {
-        const companiesData = response.data.result.data;
-        return { company: companiesData, loading: false };
-      } else {
-        return { company: null, loading: false };
-      }
-    } catch (error) {
-      console.error(error);
-      return { company: null, loading: false };
-    }
-  },
-  data() {
-    return {
-      company: [],
-      loading: true,
-    };
-  },
+  name: "Companies",
 };
 </script>

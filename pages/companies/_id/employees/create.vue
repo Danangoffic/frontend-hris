@@ -32,4 +32,9 @@
   </section>
 </template>
 
-<script></script>
+<script>
+export default {
+  middleware: "auth",
+  layout: "form",
+};
+</script>
