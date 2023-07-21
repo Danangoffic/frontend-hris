@@ -29,29 +29,31 @@
       <div class="flex flex-col gap-4">
         <div class="text-sm text-grey">Daily Use</div>
         <nuxt-link
-          :to="{ name: 'index' }"
-          :class="`${this.$route.name == 'index' ? 'active' : ''} nav-link`"
+          :to="{ name: 'companies-id' }"
+          :class="`${this.$route.name == 'companies-id' ? 'active' : ''} nav-link`"
         >
           <img src="/assets/svgs/ic-grid.svg" alt="" />
           Overview
         </nuxt-link>
         <nuxt-link
-          :to="{ name: 'employees' }"
-          :class="`${this.$route.name == 'employees' ? 'active' : ''} nav-link`"
+          :to="{ name: 'companies-id-employees' }"
+          :class="`${
+            this.$route.name == 'companies-id-employees' ? 'active' : ''
+          } nav-link`"
         >
           <img src="/assets/svgs/ic-users.svg" alt="" />
           Employees
         </nuxt-link>
         <nuxt-link
-          :to="{ name: 'teams' }"
-          :class="`${this.$route.name == 'teams' ? 'active' : ''} nav-link`"
+          :to="{ name: 'companies-id-teams' }"
+          :class="`${this.$route.name == 'companies-id-teams' ? 'active' : ''} nav-link`"
         >
           <img src="/assets/svgs/ic-briefcase.svg" alt="" />
           My Teams
         </nuxt-link>
         <nuxt-link
-          :to="{ name: 'roles' }"
-          :class="`${this.$route.name == 'roles' ? 'active' : ''} nav-link`"
+          :to="{ name: 'companies-id-roles' }"
+          :class="`${this.$route.name == 'companies-id-roles' ? 'active' : ''} nav-link`"
         >
           <img src="/assets/svgs/ic-flag.svg" alt="" />
           Roles
