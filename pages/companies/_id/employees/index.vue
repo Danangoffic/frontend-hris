@@ -50,7 +50,12 @@
             <div class="text-xl font-medium text-dark">Statistics</div>
             <p class="text-grey">Your team powers</p>
           </div>
-          <nuxt-link to="/employees/create" class="btn btn-primary"
+          <nuxt-link
+            :to="{
+              name: 'companies-id-employees-create',
+              params: { id: this.$route.params.id },
+            }"
+            class="btn btn-primary"
             >Add Employee</nuxt-link
           >
         </div>
@@ -61,7 +66,15 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-grey">In Total</p>
-              <div class="text-[32px] font-bold text-dark mt-[6px]">425,000</div>
+              <div
+                class="text-[16px] font-bold text-dark mt-[6px]"
+                v-if="loadingEmployee"
+              >
+                Loading..
+              </div>
+              <div class="text-[32px] font-bold text-dark mt-[6px]" v-else>
+                {{ totalEmployees }}
+              </div>
             </div>
           </div>
         </div>
@@ -216,5 +229,33 @@
 export default {
   middleware: "auth",
   layout: "dashboard",
+  data() {
+    return {
+      employees: [],
+      totalEmployees: 0,
+      loadingEmployee: true,
+    };
+  },
+  async fetch() {
+    try {
+      const responseEmployees = await this.$axios.get("/employee", {
+        params: {
+          company_id: this.$route.params.id,
+        },
+      });
+      if (responseEmployees.data.meta.code === 200) {
+        const employees = responseEmployees.data.result.data;
+        const responseTotalEmployees = responseEmployees.data.result.total;
+        this.totalEmployees = responseTotalEmployees;
+        this.employees = employees;
+      } else {
+        this.employees = [];
+      }
+      this.loadingEmployee = false;
+    } catch (error) {
+      console.error(error);
+      this.employees = [];
+    }
+  },
 };
 </script>

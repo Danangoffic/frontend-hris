@@ -63,9 +63,14 @@
                   {{ employeesTotal }}
                 </div>
               </div>
-              <a href="employee_create.html">
+              <NuxtLink
+                :to="{
+                  name: 'companies-id-employees-create',
+                  params: { id: this.$route.params.id },
+                }"
+              >
                 <img src="/assets/svgs/ric-plus.svg" alt="" />
-              </a>
+              </NuxtLink>
             </div>
           </div>
           <div class="card !gap-y-10 min-h-[200px]">
@@ -76,9 +81,14 @@
                   {{ teamsTotal }}
                 </div>
               </div>
-              <a href="#">
+              <NuxtLink
+                :to="{
+                  name: 'companies-id-teams-create',
+                  params: { id: this.$route.params.id },
+                }"
+              >
                 <img src="/assets/svgs/ric-plus.svg" alt="" />
-              </a>
+              </NuxtLink>
             </div>
           </div>
           <div class="card !gap-y-10 min-h-[200px]">
@@ -168,14 +178,15 @@ export default {
   },
   async fetch() {
     try {
-      const responseTeamTotal = await this.$axios.get("/employee/total", {
+      const responseTeamTotal = await this.$axios.get("/company/dashboard", {
         params: {
           company_id: this.$route.params.id,
         },
       });
       if (responseTeamTotal.data.meta.code === 200) {
-        const total = responseTeamTotal.data.result;
-        this.employeesTotal = total;
+        const result = responseTeamTotal.data.result;
+        this.employeesTotal = result.total_employees;
+        this.teamsTotal = result.total_teams;
       } else {
         console.log(responseTeamTotal.data.meta.message);
         this.employeesTotal = 0;
