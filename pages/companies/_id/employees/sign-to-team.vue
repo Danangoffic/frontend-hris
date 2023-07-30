@@ -9,11 +9,11 @@
       <div class="flex flex-row items-center gap-4">
         <img src="/assets/images/user-f-1.png" width="70" alt="" />
         <div>
-          <div class="text-lg font-semibold">Andini Danna</div>
-          <p class="text-base text-grey">ke@manasihhbang.com</p>
+          <div class="text-lg font-semibold">{{ name }}</div>
+          <p class="text-base text-grey">{{ email }}</p>
         </div>
       </div>
-      <p class="text-right text-grey">Product Designer</p>
+      <p class="text-right text-grey">{{ role_name }}</p>
     </div>
 
     <!-- Your Teams -->
@@ -27,66 +27,33 @@
           </div>
         </div>
       </div>
-
-      <form>
+      <p v-if="$fetchState.pending">Fetching Teams...</p>
+      <form v-else @submit.prevent="submitEmployee">
         <div
           class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:gap-10 lg:gap-3 mb-[50px]"
         >
-          <div class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0">
+          <div
+            v-for="team in teams"
+            :key="team.id"
+            class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0"
+          >
             <input
+              :value="team.id"
               type="radio"
-              name="productGrowth"
-              id="productGrowth"
-              @click="continueBtnClick"
+              name="team"
+              :id="`team-${team.id}`"
+              @click="setTeamId"
               class="absolute inset-0 checked:ring-2 ring-primary rounded-[26px] appearance-none"
             />
             <img src="/assets/svgs/ric-box.svg" alt="" />
             <div class="mt-6 mb-1 font-semibold text-center text-dark">
-              Product Growth
+              {{ team.name }}
             </div>
-            <p class="text-center text-grey">810 People</p>
-          </div>
-          <div class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0">
-            <input
-              @click="continueBtnClick"
-              type="radio"
-              name="marketing"
-              id="marketing"
-              class="absolute inset-0 checked:ring-2 ring-primary rounded-[26px] appearance-none"
-            />
-            <img src="/assets/svgs/ric-target.svg" alt="" />
-            <div class="mt-6 mb-1 font-semibold text-center text-dark">Marketing</div>
-            <p class="text-center text-grey">15,810 People</p>
-          </div>
-          <div class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0">
-            <input
-              @click="continueBtnClick"
-              type="radio"
-              name="globalization"
-              id="globalization"
-              class="absolute inset-0 checked:ring-2 ring-primary rounded-[26px] appearance-none"
-            />
-            <img src="/assets/svgs/ric-globe.svg" alt="" />
-            <div class="mt-6 mb-1 font-semibold text-center text-dark">Globalization</div>
-            <p class="text-center text-grey">300 People</p>
-          </div>
-          <div class="items-center card py-6 md:!py-10 md:!px-[38px] !gap-y-0">
-            <input
-              @click="continueBtnClick"
-              type="radio"
-              name="gamification"
-              id="gamification"
-              class="absolute inset-0 checked:ring-2 ring-primary rounded-[26px] appearance-none"
-            />
-            <img src="/assets/svgs/ric-award.svg" alt="" />
-            <div class="mt-6 mb-1 font-semibold text-center text-dark">Gamification</div>
-            <p class="text-center text-grey">25 People</p>
+            <p class="text-center text-grey">{{ team.employees_count }} People</p>
           </div>
         </div>
         <div class="flex justify-center">
-          <nuxt-link to="/employees" id="continueBtn" class="btn btn-primary">
-            Continue
-          </nuxt-link>
+          <button type="submit" id="continueBtn" class="btn btn-primary">Save</button>
         </div>
       </form>
     </section>
@@ -97,14 +64,57 @@
 export default {
   middleware: "auth",
   layout: "form",
+  computed: {
+    name() {
+      return this.$store.state.employee.name;
+    },
+    email() {
+      return this.$store.state.employee.email;
+    },
+  },
   data() {
     return {
+      role_name: "",
       continueBtnClass: "hidden",
+      teams: [],
     };
+  },
+  async fetch() {
+    let role = this.$store.state.employee.role_id;
+    const response = await this.$axios.$get(`/role`, {
+      params: { id: role, company_id: this.$route.params.id },
+    });
+    this.role_name = response.result.name;
+    await this.fetchTeams();
   },
   methods: {
     continueBtnClick() {
       this.continueBtn = "";
+    },
+    async fetchTeams() {
+      const response = await this.$axios.get("/team", {
+        params: {
+          company_id: this.$route.params.id,
+          limit: 1000,
+        },
+      });
+      this.teams = response.data.result.data;
+    },
+    setTeamId(e) {
+      this.$store.commit("employee/updateTeamId", e.target.value);
+    },
+    async submitEmployee() {
+      const responsePost = await this.$axios.post("/employee", {
+        company_id: this.$route.params.id,
+        role_id: this.$store.state.employee.role_id,
+        team_id: this.$store.state.employee.team_id,
+        name: this.$store.state.employee.name,
+        email: this.$store.state.employee.email,
+        gender: this.$store.state.employee.gender,
+        age: this.$store.state.employee.age,
+        phone: this.$store.state.employee.phone,
+      });
+      this.$router.push({ name: "companies-id-employees" });
     },
   },
 };

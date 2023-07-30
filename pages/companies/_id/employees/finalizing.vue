@@ -8,14 +8,19 @@
     <form class="w-full card">
       <div class="flex flex-col items-center mb-[14px]">
         <img src="/assets/images/user-f-1.png" width="70" alt="" />
-        <div class="mt-6 mb-1 text-lg font-semibold">Andini Danna</div>
-        <p class="text-base text-grey">ke@manasihhbang.com</p>
+        <div class="mt-6 mb-1 text-lg font-semibold">{{ name }}</div>
+        <p class="text-base text-grey">{{ email }}</p>
       </div>
       <div class="form-group">
         <label for="" class="text-grey">Phone Number</label>
-        <input type="number" class="input-field" />
+        <input type="number" @input="updatePhone" class="input-field" />
       </div>
-      <nuxt-link to="role" class="w-full btn btn-primary mt-[14px]"> Continue </nuxt-link>
+      <nuxt-link
+        :to="{ name: 'companies-id-employees-role' }"
+        class="w-full btn btn-primary mt-[14px]"
+      >
+        Continue
+      </nuxt-link>
     </form>
   </section>
 </template>
@@ -24,5 +29,29 @@
 export default {
   middleware: "auth",
   layout: "form",
+  // data() {
+  //   return {
+  //     name: this.$store.employee.name,
+  //     email: this.$store.employee.email,
+  //   };
+  // },
+
+  computed: {
+    // get name and email from store employee
+    name() {
+      return this.$store.state.employee.name;
+    },
+    email() {
+      return this.$store.state.employee.email;
+    },
+    phone() {
+      return this.$store.state.employee.phone;
+    },
+  },
+  methods: {
+    updatePhone(e) {
+      this.$store.commit("employee/updatePhone", e.target.value);
+    },
+  },
 };
 </script>

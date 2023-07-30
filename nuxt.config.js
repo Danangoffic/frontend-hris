@@ -56,6 +56,12 @@ export default {
           global: true,
           required: true,
           type: 'Bearer',
+          maxAge: 86400,
+        },
+        refreshToken: {
+          property: 'token',
+          data: 'token',
+          maxAge: 86400, // Durasi refresh token dalam detik (1 hari)
         },
         user: {
           property: 'result',
@@ -75,7 +81,7 @@ export default {
     // proxy: true,
     // credentials: true,
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://backend-powerhuman.test/api',
+    baseURL: 'https://1857-103-209-251-38.ngrok-free.app/api',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

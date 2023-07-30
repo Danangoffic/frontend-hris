@@ -185,8 +185,8 @@ export default {
       });
       if (responseTeamTotal.data.meta.code === 200) {
         const result = responseTeamTotal.data.result;
-        this.employeesTotal = result.total_employees;
-        this.teamsTotal = result.total_teams;
+        this.employeesTotal = result.employees_total;
+        this.teamsTotal = result.company.teams_count;
       } else {
         console.log(responseTeamTotal.data.meta.message);
         this.employeesTotal = 0;

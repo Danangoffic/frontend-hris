@@ -5,7 +5,7 @@
       Team that can bring your company <br />
       growing bigger and bigger
     </p>
-    <form class="w-full card">
+    <form class="w-full card" @submit.prevent="create">
       <div class="mb-[2px] mx-auto">
         <img src="/assets/svgs/ric-box.svg" alt="" />
       </div>
@@ -14,24 +14,28 @@
         <input
           type="email"
           class="input-field disabled:bg-grey disabled:outline-none"
-          value="angga@yourcompany.com"
+          :value="team.email"
           disabled
         />
       </div>
       <div class="form-group">
-        <label for="" class="text-grey">Team Name</label>
-        <input type="text" class="input-field" value="Growth Marketing" />
+        <label for="name" class="text-grey">Team Name</label>
+        <input
+          type="text"
+          v-model="team.name"
+          name="name"
+          id="name"
+          class="input-field"
+        />
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="" class="text-grey">Status</label>
         <select name="" id="" class="appearance-none input-field form-icon-chevron_down">
           <option value="" selected>Active</option>
           <option value="">Inactive</option>
         </select>
-      </div>
-      <nuxt-link to="/teams" class="w-full btn btn-primary mt-[14px]">
-        Continue
-      </nuxt-link>
+      </div> -->
+      <button type="submit" class="w-full btn btn-primary mt-[14px]">Continue</button>
     </form>
   </section>
 </template>
@@ -40,5 +44,24 @@
 export default {
   middleware: "auth",
   layout: "form",
+  data() {
+    return {
+      team: {
+        email: this.$auth.user.email,
+        name: "",
+      },
+    };
+  },
+  methods: {
+    async create() {
+      try {
+        this.team.company_id = this.$route.params.id;
+        const response = await this.$axios.post("/team", this.team);
+        this.$router.push({ name: "companies-id-teams" });
+      } catch (error) {
+        console.log("failed to send team data with : ", error);
+      }
+    },
+  },
 };
 </script>

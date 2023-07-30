@@ -8,50 +8,32 @@
     <form class="w-full card">
       <div class="flex flex-col items-center mb-[14px]">
         <img src="/assets/images/user-f-1.png" width="70" alt="" />
-        <div class="mt-6 mb-1 text-lg font-semibold">Andini Danna</div>
-        <p class="text-base text-grey">ke@manasihhbang.com</p>
+        <div class="mt-6 mb-1 text-lg font-semibold">{{ name }}</div>
+        <p class="text-base text-grey">{{ email }}</p>
       </div>
       <div class="form-group">
         <label for="" class="text-grey">Select Role</label>
-        <select name="" id="" class="appearance-none input-field form-icon-chevron_down">
-          <option value="" selected>Product Designer</option>
-          <option value="">Website Developer</option>
-          <option value="">Executive Manager</option>
-          <option value="">iOS Engineer</option>
+        <select
+          :value="role_id"
+          @change="updateRoleId"
+          name=""
+          id=""
+          class="appearance-none input-field form-icon-chevron_down"
+        >
+          <option value="" disabled selected>Select Role</option>
+          <option v-for="role in roles" :key="role.id" :value="role.id">
+            {{ role.name }}
+          </option>
         </select>
       </div>
 
       <!-- Responsibilities -->
-      <section>
-        <label for="" class="text-grey"> Responsibilities </label>
-        <div class="flex flex-col gap-4 mt-[10px]">
-          <div class="flex items-start md:items-center gap-[6px]">
-            <img src="/assets/svgs/ic-check-circle.svg" alt="" />
-            <span class="text-sm text-dark">
-              Lorem ipsum tanggung jawab pixel studio website
-            </span>
-          </div>
-          <div class="flex items-start md:items-center gap-[6px]">
-            <img src="/assets/svgs/ic-check-circle.svg" alt="" />
-            <span class="text-sm text-dark">
-              Growth strategy studio make things better again with
-            </span>
-          </div>
-          <div class="flex items-start md:items-center gap-[6px]">
-            <img src="/assets/svgs/ic-check-circle.svg" alt="" />
-            <span class="text-sm text-dark">
-              Menyediakan beberapa kit untuk kebutuhan
-            </span>
-          </div>
-          <div class="flex items-start md:items-center gap-[6px]">
-            <img src="/assets/svgs/ic-check-circle.svg" alt="" />
-            <span class="text-sm text-dark">
-              Bekerja sama dengan designer dan developer tim
-            </span>
-          </div>
-        </div>
-      </section>
-      <nuxt-link to="sign-to-team" class="w-full btn btn-primary mt-[14px]">
+      <EmployeeResponsibilities :responsibilities="responsibilities" />
+
+      <nuxt-link
+        :to="{ name: 'companies-id-employees-sign-to-team' }"
+        class="w-full btn btn-primary mt-[14px]"
+      >
         Continue
       </nuxt-link>
     </form>
@@ -62,5 +44,39 @@
 export default {
   middleware: "auth",
   layout: "form",
+  computed: {
+    name() {
+      return this.$store.state.employee.name;
+    },
+    email() {
+      return this.$store.state.employee.email;
+    },
+    role_id() {
+      return this.$store.state.employee.role_id;
+    },
+  },
+  data() {
+    return {
+      roles: [],
+      responsibilities: [],
+    };
+  },
+  async fetch() {
+    const response = await this.$axios.get("/role", {
+      params: { company_id: this.$route.params.id, limit: 100, with_responsibilities: 1 },
+    });
+    const { result } = response.data;
+    this.roles = result.data;
+  },
+  methods: {
+    getResponsibilities(v) {
+      const findRole = this.roles.find((r) => r.id == v);
+      this.responsibilities = findRole.responsibilities || [];
+    },
+    updateRoleId(e) {
+      this.$store.commit("employee/updateRoleId", e.target.value);
+      this.getResponsibilities(e.target.value);
+    },
+  },
 };
 </script>
