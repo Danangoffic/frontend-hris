@@ -62,7 +62,7 @@ export default {
     };
   },
   async fetch() {
-    const response = await this.$axios.get("/role", {
+    const response = await this.$axios.get("/api/role", {
       params: { company_id: this.$route.params.id, limit: 100, with_responsibilities: 1 },
     });
     const { result } = response.data;

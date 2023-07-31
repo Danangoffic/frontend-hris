@@ -135,7 +135,7 @@ export default {
   },
   async fetch() {
     try {
-      const responseEmployees = await this.$axios.get("/employee", {
+      const responseEmployees = await this.$axios.get("/api/employee", {
         params: {
           company_id: this.$route.params.id,
           limit: 1000,

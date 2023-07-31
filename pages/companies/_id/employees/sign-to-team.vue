@@ -81,7 +81,7 @@ export default {
   },
   async fetch() {
     let role = this.$store.state.employee.role_id;
-    const response = await this.$axios.$get(`/role`, {
+    const response = await this.$axios.$get(`/api/role`, {
       params: { id: role, company_id: this.$route.params.id },
     });
     this.role_name = response.result.name;
@@ -92,7 +92,7 @@ export default {
       this.continueBtn = "";
     },
     async fetchTeams() {
-      const response = await this.$axios.get("/team", {
+      const response = await this.$axios.get("/api/team", {
         params: {
           company_id: this.$route.params.id,
           limit: 1000,
@@ -104,7 +104,7 @@ export default {
       this.$store.commit("employee/updateTeamId", e.target.value);
     },
     async submitEmployee() {
-      const responsePost = await this.$axios.post("/employee", {
+      const responsePost = await this.$axios.post("/api/employee", {
         company_id: this.$route.params.id,
         role_id: this.$store.state.employee.role_id,
         team_id: this.$store.state.employee.team_id,

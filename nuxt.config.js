@@ -68,9 +68,9 @@ export default {
           autoFetch: true,
         },
         endpoints: {
-          login: { url: '/login', method: 'post' },
-          logout: { url: '/logout', method: 'post' },
-          user: { url: '/user', method: 'get' },
+          login: { url: '/api/login', method: 'post' },
+          logout: { url: '/api/logout', method: 'post' },
+          user: { url: '/api/user', method: 'get' },
         },
       },
     },
@@ -78,10 +78,17 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // proxy: true,
+    proxy: true,
     // credentials: true,
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'https://1857-103-209-251-38.ngrok-free.app/api',
+    baseURL:
+      'https://cors-anywhere.herokuapp.com/https://3dbb-103-209-251-38.ngrok-free.app/api',
+  },
+  //
+  proxy: {
+    '/api': {
+      target: 'https://3dbb-103-209-251-38.ngrok-free.app',
+    },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

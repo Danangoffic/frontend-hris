@@ -36,7 +36,7 @@ export default {
   middleware: "auth",
   async fetch() {
     try {
-      const response = await this.$axios.get("/company");
+      const response = await this.$axios.get("/api/company");
       if (response.data.meta.code === 200) {
         const companiesData = response.data.result.data;
         this.companies = companiesData;

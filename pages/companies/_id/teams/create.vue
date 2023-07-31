@@ -56,7 +56,7 @@ export default {
     async create() {
       try {
         this.team.company_id = this.$route.params.id;
-        const response = await this.$axios.post("/team", this.team);
+        const response = await this.$axios.post("/api/team", this.team);
         this.$router.push({ name: "companies-id-teams" });
       } catch (error) {
         console.log("failed to send team data with : ", error);

@@ -178,7 +178,7 @@ export default {
   },
   async fetch() {
     try {
-      const responseTeamTotal = await this.$axios.get("/company/dashboard", {
+      const responseTeamTotal = await this.$axios.get("/api/company/dashboard", {
         params: {
           company_id: this.$route.params.id,
         },

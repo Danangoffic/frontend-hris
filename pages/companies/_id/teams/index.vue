@@ -38,7 +38,7 @@ export default {
     };
   },
   async fetch() {
-    const response = await this.$axios.get("/team", {
+    const response = await this.$axios.get("/api/team", {
       params: { company_id: this.$route.params.id, limit: 1000 },
     });
     const { result } = response.data;

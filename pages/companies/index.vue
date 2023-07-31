@@ -21,6 +21,35 @@
 <script>
 export default {
   middleware: "auth",
-  name: "Companies",
+  async fetch() {
+    try {
+      const response = await this.$axios.get("/api/company");
+      if (response.data.meta.code === 200) {
+        const companiesData = response.data.result.data;
+        this.companies = companiesData;
+      } else {
+        this.companies = null;
+      }
+    } catch (error) {
+      console.error(error);
+      this.companies = null;
+    }
+  },
+  data() {
+    return {
+      companies: [],
+      selectedCompany: "",
+    };
+  },
+  methods: {
+    selectCompany() {
+      this.$router.push({
+        name: "companies-id",
+        params: {
+          id: this.selectedCompany,
+        },
+      });
+    },
+  },
 };
 </script>

@@ -30,7 +30,7 @@ export default {
   methods: {
     async createCompany() {
       try {
-        const response = await this.$axios.post("/company", this.company);
+        const response = await this.$axios.post("/api/company", this.company);
         const data = response.data.result;
         if (response.data.meta.code === 200) {
           this.$router.push({
